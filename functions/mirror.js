@@ -62,12 +62,20 @@ app.all('*', function (req, res, next) {
     // Prepares the response
     res.status(mirrorCode).set(responseHeaders);
 
+    if (process.env.APP_VERSION) {
+        req.body = "Version: " + process.env.APP_VERSION + "\n" + req.body
+    }
+
     // Appends the full request or only the request body if wanted
     if (mirrorRequest) {
         res.json(request);
     } else if (mirrorBody) {
         res.send(req.body);
     }
+    if (process.env.APP_VERSION) {
+        res.send("Version: " + process.env.APP_VERSION);
+    }
+    
 
     // Flushes!
     return setTimeout(() => res.end(), delay);
